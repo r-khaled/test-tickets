@@ -1,89 +1,70 @@
-# KAFUI-391 — Guest Name Without Profile + Name Search
+# KAFUI-391 — Guest Name Without Profile
 
-- **Batch:** 01 — Hospitality / Reservations (reported 09–10 November 2026)
 - **Jira:** https://amerhashima.atlassian.net/browse/KAFUI-391
-- **Original title:** [Hospitality][Reservations] Capture Guest Name Without Profile and Allow Name Search and Filtering
-- **Jira status at review:** Done — last status change 11 Nov 2026, 21:10 (Amer Hashima)
-- **QA status:** **FAILED — PENDING REOPEN** (NOT ACCEPTED)
-- **QA observation recorded:** 17 Nov 2026 (report from tester in the review conversation)
-- **Actual Jira reopen:** **NOT YET PERFORMED** — do not confuse with this review file
-- **Owner of QA verdict:** tester; developer implementation claims are not acceptance evidence
+- **Batch:** 01 — Hospitality Reservations (9–10 November)
+- **Assignee:** Amer Hashima
+- **Current Jira status:** **To Do — reopened 17 Nov 2026**
+- **QA result:** **FAIL — NOT ACCEPTED**
+- **Previous QA failure / reopen:** 11 Nov 2026
+- **Current failure / reopen:** 17 Nov 2026
+- **Jira QA comment:** added on 17 Nov 2026 (comment 10823)
 
-## شرح المشكلة بالعربي
+## شرح التذكرة بالعربي
 
-لو حد اتصل يحجز لأول مرة، موظف الحجوزات ممكن يعمل Reservation من غير ما ينشئ له Guest Profile كامل. لكن Step 3 ما فيهاش حقل مستقل يكتب فيه اسم الشخص اللي حجز. بالتالي لما ييجي يدور على الحجز بعد كده، ما يقدرش يعتمد على اسم العميل، ويضطر يعرف رقم الحجز. المطلوب **إضافة اسم ضيف/جهة اتصال مستقل، حفظه، إظهاره، وإمكانية البحث والفلترة بيه**، من غير إجبار الموظف على Guest Profile.
+إحنا بنحتاج نحجز لعميل جديد اتصل بالتليفون حتى لو لسه ما عندوش Guest Profile في النظام. المطلوب في Step 3 إن موظف الحجوزات يكتب اسم الضيف/الشخص المسؤول عن الحجز بشكل مستقل، ويحفظه، وبعد كده يقدر يدور على الحجز بالاسم من Reservations List. مجرد وجود Primary Guest selector لا يكفي لأنه بيحتاج Profile موجود بالفعل.
 
-**اللي حصل في إعادة الاختبار الحالية:** المختبِر رجع للشاشة في 17 نوفمبر وأكد إن **حقل إضافة اسم الضيف ما زال غير موجود**. إذن المتطلب الأساسي لم يُنفَّذ في البيئة المختبَرة. البحث بالاسم لم تتم إعادة تجربته في مراجعة 17 نوفمبر؛ لكن كان مسجلاً كفشل في QA Retest يوم 11 نوفمبر.
+**نتيجة اختبارنا الحالية:** نفس المشكلة اللي رجعنا بسببها التذكرة يوم 11 نوفمبر لسه موجودة. دخلنا Step 3 يوم 17 نوفمبر، وما لقيناش حقل مستقل لإضافة اسم الضيف.
 
-## Original report — scope (from Jira)
+## Original report
 
-**Description:** Reservation Wizard Step 3 (Guest & Billing Information) has optional Primary Guest Profile, Customer Company, Company Payer and Booking Agent. When none is selected, there is no separate free-text lead guest/contact name. A profile-less booking can be found by Reservation Number but not by new guest name.
+**Description:** Reservations Wizard Step 3 supports optional Primary Guest Profile, Customer Company, Company Payer and Booking Agent but lacks an independent booking contact/guest name for reservations without a profile.
 
-**Original test data:** An actual reservation was created without Primary Guest, Customer Company, Company Payer or Booking Agent. It was retrievable by Reservation Number. Exact reservation number and the test guest name were not documented; **do not fabricate them**.
+**Original test data:** Booking without Primary Guest, Customer Company, Company Payer, or Booking Agent. Booking could be retrieved by Reservation Number; exact number not recorded.
 
-**Original expected behavior (some business details need confirmation):**
-1. Allow lightweight lead guest/contact name in Step 3 without mandatory Guest Profile.
-2. Persist the name and display it in reservation detail/list/arrivals as approved.
-3. Search and filter by guest/contact name alongside Reservation Number.
-4. Preserve/reconcile that name if a full Guest Profile is linked later.
-5. Confirm minimum contact details, name-matching, privacy/access policy with business owner.
+**Expected behavior:**
+- Capture guest/contact name without creating a full Guest Profile.
+- Save and display name with the reservation.
+- Allow searching/filtering by the saved name in Reservations List.
 
-**Original real behavior:** Profile-less reservation creation was possible; independent guest/contact name and name search/filter were not available.
+**Real behavior (original and latest QA):** No independent Guest/Contact Name input. Previously the name search/filter was also absent.
 
-**Action requested:** Confirm minimal data/search policy, implement create + persist + display + name search/filter end to end, ensure backward compatibility and safe later profile linking.
+**Action needed:** Implement the original Create → Save → Display/Search feature and show it working in the deployed browser UI.
 
-## Previous reopen / developer timeline
+## تاريخ التذكرة والمشكلة مع Done
 
-| Date | Event | Interpretation |
-| --- | --- | --- |
-| 10 Nov 2026 23:13 | Amer marked Jira **Done** | Developer closed issue |
-| 11 Nov 2026 09:13 | Tester retested, filed **QA Retest — Not Accepted**, reopened to **To Do** | Missing independent name and name-based list search confirmed |
-| 11 Nov 2026 21:10 | Amer moved **To Do → Done** again | **No later explanatory fix/comment in Jira** after the tester's failed retest |
-| 17 Nov 2026 | Tester reports Step 3 still lacks independent guest name | **Current QA FAIL**, reopen required; no Jira status change performed yet |
+| Date | Event |
+| --- | --- |
+| 10 Nov 2026 | Developer marked Done |
+| 11 Nov 2026 | QA failed; issue reopened because name field and search were absent |
+| 11 Nov 2026 | Developer marked Done again; no subsequent issue comment explaining the fix |
+| 17 Nov 2026 | QA reconfirmed name field is absent; reopened again, To Do; assigned to Amer |
 
-**Developer evidence:** No new developer comment explaining how this issue was fixed after the QA reopen. Jira Done is not proof of a working feature.
+## الـRetest — المطلوب بالضبط
 
-## طريقة إعادة الاختبار — بالعربي
+1. افتح **Hospitality → Reservations → Create Reservation → Step 3**.
+2. من غير ما تختار Guest Profile أو شركة، شوف هل تقدر تدخل **Guest/Contact Name** مستقل.
+3. بعد إصلاح الحقل، لازم الاسم يتحفظ ويظهر في الحجز وتقدر تبحث بيه في **Reservations List**.
 
-1. افتح **Hospitality → Reservations → Create Reservation** وامشِ في الـWizard لحد **Step 3 — Guest & Billing Information**.
-2. سيب حقول **Primary Guest Profile / Customer Company / Company Payer / Booking Agent** بدون اختيار، واعرف هل فيه حقل **Guest/Contact Name** مستقل.
-3. لو الحقل موجود، اكتب اسم اختبار وهمي واضح (مثلاً `QA Test Guest 391`) وسجّل الحجز ببيانات حجز صالحة.
-4. افتح **Reservations List** واستخدم Search/Filter بالاسم اللي كتبته؛ لازم يظهر الحجز الصحيح من غير معرفة رقم الحجز.
-5. افتح Reservation Details واعمل Refresh؛ الاسم لازم يفضل محفوظ.
-6. جرّب اسم مختلف غير موجود؛ ما ينفعش يطلع الحجز بشكل خاطئ.
-7. لو الـBusiness Rule اتحدد، اختبر ربط Guest Profile لاحقًا والتأكد إن الاسم/البيانات مش بتضيع.
+## Execution record — 17 Nov 2026
 
-**لو الحقل مش موجود من الخطوة 2:** سجّل Fail مباشرة؛ بقية السيناريوهات تصبح Blocked بسبب غياب الوظيفة الأساسية، مش Pass.
+| Step | Expected | Actual observed | QA |
+| --- | --- | --- | --- |
+| Enter Step 3 without linked Guest Profile | Independent Guest/Contact Name field exists | **Field is missing** | **FAIL** |
+| Create/save reservation with name; search by name | Saved name visible and searchable | Not executed after missing field blocked the flow; previously failed 11 Nov | BLOCKED |
 
-## Retest execution record
+**Final QA verdict: FAIL; original requested feature still not delivered.**
 
-| Case | Input / action | Expected result | Latest observed result | Result |
-| --- | --- | --- | --- | --- |
-| 391-T01 | Step 3 without linked guest/profile | Independent guest/contact name input is available | 17 Nov: tester explicitly confirms **field absent** | **FAIL** |
-| 391-T02 | Enter example contact name; save valid profile-less reservation | Name persists without mandatory profile | Cannot execute when independent name field absent | BLOCKED |
-| 391-T03 | Search/filter Reservations List by saved name | Matching reservation appears | 11 Nov: unavailable; not freshly retested 17 Nov | PREVIOUS FAIL / RETEST PENDING |
-| 391-T04 | Open detail/reload/list | Saved name displayed after reload | Blocked by missing field | BLOCKED |
-| 391-T05 | Search for nonmatching name | No false-positive reservation | Not tested | PENDING |
-| 391-T06 | Link full Guest Profile later (if approved) | Original booking data retained or explicitly reconciled | Business rule not confirmed | BUSINESS DECISION / PENDING |
+## المطلوب من أمير قبل إنه يقفلها
 
-**Execution environment/build:** Not provided; capture deployed URL/build before reproducing. **Test screenshots/video:** Not yet supplied. Do not invent test evidence.
+- يوضح بالضبط إيه اللي اتغير في الحقل والحفظ والبحث، وإيه اللي نزل على بيئة الاختبار.
+- يثبت إن الفلو شغال من الـWizard للـReservations List.
+- ما يقفلش Done من غير تفاصيل التنفيذ ونتيجة اختبار في UI.
 
-## Decision / follow-up
+## سؤال الـMeeting
 
-- **QA verdict:** **FAIL / NOT ACCEPTED**.
-- **Next Jira action:** Reopen KAFUI-391 **after tester approval to mutate Jira**; include step 2 failure and request the missing feature, not just a Done status update.
-- **Developer must provide:** What exactly changed (UI, API, database, search/filter), where deployed, test evidence for end-to-end Create → Save → List Search → Detail, and any remaining business questions.
-- **Acceptance gate:** QA confirms on the deployed UI that contact name capture, persistence, display and search/filter work end to end. Never accept purely from a unit-test number, agent message, or Jira status.
+**ليه التذكرة اتقفلت Done تاني بعد فشل الـQA يوم 11 نوفمبر، وإحنا رجعنا يوم 17 نوفمبر ولقينا نفس الحقل لسه مش موجود؟**
 
-## Meeting questions
+## Follow-up
 
-1. ليه التذكرة اتقفلت Done للمرة الثانية بعد ما الـQA أكد إن الحقل والبحث مش موجودين؟
-2. إيه التغيير الفعلي اللي اتعمل بعد إعادة الفتح؟ فين الـcommit/deployment evidence؟
-3. هل وظيفة الاسم المستقل متنفذة في الـUI والـAPI والـSearch فعلًا، ولا مجرد تعديل جزئي؟
-4. لو فيه Business Decision مانع التنفيذ، ليه التذكرة اتقفلت Done بدل ما يتم توضيح الـBlocker؟
-
-## Review history (append; never delete earlier outcomes)
-
-- **2026-11-11 — QA FAIL:** No independent name or list search in UI; Jira issue reopened by tester.
-- **2026-11-11 — Jira Done:** Developer closed again without a documented subsequent resolution comment.
-- **2026-11-17 — QA FAIL / PENDING REOPEN:** Tester confirms independent guest-name input still absent. Further persistence/search cases cannot be accepted on this build.
+- **Jira action completed:** Reopened to To Do; Amer Hashima remains assignee; QA comment 10823 added.
+- **Next acceptance:** QA tests actual field + save + name search after the fix.
